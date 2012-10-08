@@ -10,6 +10,11 @@ import os
 import sys
 
 # project modules
+import reduce
+import quantization
+import predictive_encoding as pe
+import error_quantization as eq
+
 
 def main(args):
     pass

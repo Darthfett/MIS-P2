@@ -1,9 +1,8 @@
 
-def predict_encoding(original_colors, quantized_colors):
+def predict_encoding():
     """
-    (Task 3): Given three channels original_colors=[c1, c2, c3] and three channels quantized_colors=[q1, q2, q3] of an image,
-    perform one of eight predictive encoding schemes on the quantized data (this interface is subject to change).
-    
+    (Task 3): Given ???, perform one of eight predictive encoding schemes on the quantized data:
+
     – PC Option 1: No PC (use original values).
     – PC Option 2: Predictive encoding with the predictor A.
     – PC Option 3: Predictive encoding with the predictor B.
@@ -15,9 +14,7 @@ def predict_encoding(original_colors, quantized_colors):
         * if B - C > 0 and A - C > 0 then C + sqrt((B - C)^2 + (A - C)^2),
         * else if B - C < 0 and A - C < 0 then C - sqrt((B - C)^2 + (A - C)^2,
         * else (A+B) / 2.
-    
+
     """
-    c1, c2, c3 = original_colors
-    q1, q2, q3 = quantized_colors
-    
+
     raise NotImplementedError("TODO: Implement predictive encoding functionality")
