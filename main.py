@@ -17,7 +17,6 @@ import error_quantization as eq
 import encoding
 
 HELP = """
-
 encoding: choose the encoding scheme
 error: choose the error quantization parameters
 help: display this message
@@ -26,8 +25,7 @@ quantization: choose the number of bins to quantize
 reduce: choose the resolution reduction parameters
 save: save the image to the disk
 select: select a new image
-
-""".strip()
+"""
 
 Image = None
 
@@ -101,7 +99,33 @@ CMD_DICT = {
 
 def main(args):
     Image = get_image()
-    //display(Image)
+    channels = get_channels(Image)
+    while True:
+        # Accept a command with args from the user (and split into a list)
+        command = raw_input('Enter a command (or "help"): ').strip().split(' ')
+
+        cmd = command[0].lower() # command is case-insensitive
+        args = command[1:]
+
+        # validate cmd to be a valid command
+        if cmd not in CMD_DICT:
+            if not cmd:
+                # no command entered
+                cmd = 'help'
+            elif any(command.startswith(cmd) for command in CMD_DICT):
+                # command is not an exact match, try a partial match
+                cmd = next(command for command in CMD_DICT if command.startswith(cmd))
+
+        if cmd not in CMD_DICT:
+            # command is a quit, exit, or invalid command.
+            if cmd.startswith(('q', 'e')):
+                break
+            print('Invalid command "{cmd}".  Valid commands: {cmds}'.format(cmd=cmd, cmds=', '.join(sorted(CMD_DICT.keys()))))
+            continue
+        # At this point, cmd is a valid command.
+        CMD_DICT[cmd](Image, channels[:], *args)
+
+    # display(Image)
 
 
 if __name__ == '__main__':
