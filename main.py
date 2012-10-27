@@ -28,6 +28,7 @@ select: select a new image
 """
 
 Image = None
+reduce_S = (None, None, None)
 
 def get_channels(image):
     """Get a list of tuples containing the reds, greens, and blues of the image."""
@@ -44,6 +45,41 @@ def get_image():
         except Exception:
             pass
     return image
+
+def get_reduce_S():
+    s1 = None
+    while s1 is None:
+        s1_input = raw_input("s1: ")
+        if not s1_input:
+            break
+        if float(s1_input) != 0:
+            s1 = float(s1_input)
+        else:
+            print("Invalid s1 value")
+
+    s2 = None
+    while s2 is None:
+        s2_input = raw_input("s2: ")
+        if not s2_input:
+            break
+        if float(s2_input) != 0:
+            s2 = float(s2_input)
+        else:
+            print("Invalid s2 value")
+
+    s3 = None
+    while s3 is None:
+        s3_input = raw_input("s3: ")
+        if not s3_input:
+            break
+        if float(s3_input) != 0:
+            s3 = float(s3_input)
+        else:
+            print("Invalid s3 value")
+
+    # default values to reduce_S values if the user enters ''
+    S = tuple((s if s is not None else reduce_S[i]) for i, s in enumerate((s1, s2, s3)))
+    return S
 
 # Command functions
 
@@ -100,6 +136,7 @@ CMD_DICT = {
 def main(args):
     Image = get_image()
     channels = get_channels(Image)
+    reduce_S = get_reduce_S()
     while True:
         # Accept a command with args from the user (and split into a list)
         command = raw_input('Enter a command (or "help"): ').strip().split(' ')
