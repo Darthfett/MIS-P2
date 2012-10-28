@@ -8,6 +8,7 @@ import Image as pil
 # builtin modules
 import os
 import sys
+import itertools as it
 
 # project modules
 import reduce
@@ -95,6 +96,15 @@ def quantization_delegate(image, *args):
 
 def reduce_delegate(image, channels, *args):
     new_channels = reduce.reduce(channels, image.size[0], reduce_S)
+    # height = len(new_channels[0]) # height of new image
+    # width = len(new_channels[0][0]) # width of new image
+    # flat_channels = list(map(it.chain.from_iterable, new_channels)) # a single flat sequence for all pixel values in each channel
+    # pixels = zip(*flat_channels) # A list of tuples containing (R, G, B)
+    # pixels = [(int(p1), int(p2), int(p3)) for p1, p2, p3 in pixels] # Integerize the tuples
+    # image = pil.new('RGB', (width, height)) # Create a new destination image for the pixels
+    # image.putdata(pixels) # copy in the pixels
+    # image.save("test2.png", 'PNG') # save the image to a test file
+    # print("saved")
 
 def save(image, *args):
     filename = raw_input('Filename: ')
