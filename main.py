@@ -28,7 +28,7 @@ select: select a new image
 """
 
 Image = None
-reduce_S = (None, None, None)
+reduce_S = (None, None, None, None, None, None) # holds s1x, s1y, s2x, s2y, s3x, s3y values
 
 def get_channels(image):
     """Get a list of tuples containing the reds, greens, and blues of the image."""
@@ -47,39 +47,25 @@ def get_image():
     return image
 
 def get_reduce_S():
-    s1 = None
-    while s1 is None:
-        s1_input = raw_input("s1: ")
-        if not s1_input:
-            break
-        if float(s1_input) != 0:
-            s1 = float(s1_input)
-        else:
-            print("Invalid s1 value")
 
-    s2 = None
-    while s2 is None:
-        s2_input = raw_input("s2: ")
-        if not s2_input:
-            break
-        if float(s2_input) != 0:
-            s2 = float(s2_input)
-        else:
-            print("Invalid s2 value")
+    s_str = ['s1x', 's1y', 's2x', 's2y', 's3x', 's3y']
 
-    s3 = None
-    while s3 is None:
-        s3_input = raw_input("s3: ")
-        if not s3_input:
-            break
-        if float(s3_input) != 0:
-            s3 = float(s3_input)
-        else:
-            print("Invalid s3 value")
+    s_val = []
+    for str_ in s_str:
+        s = None
+        while s is None:
+            s_input = raw_input(str_ + ': ')
+            if not s_input:
+                break
+            if int(s_input) != 0:
+                s = int(s_input)
+            else:
+                print('Invalid {} value'.format(str_))
+        s_val.append(s)
 
     # default values to reduce_S values if the user enters ''
-    S = tuple((s if s is not None else reduce_S[i]) for i, s in enumerate((s1, s2, s3)))
-    return S
+    S = tuple((s if s is not None else reduce_S[i]) for i, s in enumerate(s_val))
+    return tuple(map(tuple, (S[0:2], S[2:4], S[4:6])))
 
 # Command functions
 
@@ -107,8 +93,8 @@ def predict_delegate(image, *args):
 def quantization_delegate(image, *args):
     pass
 
-def reduce_delegate(image, *args):
-    pass
+def reduce_delegate(image, channels, *args):
+    new_channels = reduce.reduce(channels, image.size[0], reduce_S)
 
 def save(image, *args):
     filename = raw_input('Filename: ')
@@ -134,6 +120,7 @@ CMD_DICT = {
 }
 
 def main(args):
+    global Image, reduce_S
     Image = get_image()
     channels = get_channels(Image)
     reduce_S = get_reduce_S()
