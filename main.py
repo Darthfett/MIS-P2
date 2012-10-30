@@ -48,8 +48,8 @@ def get_image():
     return image
 
 def get_reduce_S():
-
-    s_str = ['s1x', 's1y', 's2x', 's2y', 's3x', 's3y']
+    print("Enter in reduction parameters (6 integers: a 1 results in no reduction)")
+    s_str = ['red width', 'red height', 'green width', 'green height', 'blue width', 'blue height']
 
     s_val = []
     for str_ in s_str:
@@ -57,6 +57,7 @@ def get_reduce_S():
         while s is None:
             s_input = raw_input(str_ + ': ')
             if not s_input:
+                s = 1
                 break
             if int(s_input) != 0:
                 s = int(s_input)
@@ -81,7 +82,7 @@ def display(image, *args):
 
 def encoding_delegate(image, *args):
     """
-    Will need to get an array that contains: 
+    Will need to get an array that contains:
         1. a value informing what encoding is needed.
         2. an array of values to encode. Assuming RGB values.
 
@@ -95,17 +96,29 @@ def error_delegate(image, *args):
 def help(image, *args):
     print(HELP)
 
+def output_delegate(image, *args):
+    pass
+
 def predict_delegate(image, *args):
     pass
 
-def quantization_delegate(image, *args):
+def quantization_delegate(image, channels, *args):
     pass
 
-def reduce_delegate(image, channels, *args):
+def reduce_delegate(image, *args):
+    channels = get_channels(Image)
     new_channels = reduce.reduce(channels, image.size[0], reduce_S)
-    # height = len(new_channels[0]) # height of new image
-    # width = len(new_channels[0][0]) # width of new image
-    # flat_channels = list(map(it.chain.from_iterable, new_channels)) # a single flat sequence for all pixel values in each channel
+    heights = list(map(len, new_channels)) # height of new image
+    widths = [len(channel[0]) for channel in new_channels] # width of new image
+    flat_channels = list(map(it.chain.from_iterable, new_channels)) # a single flat sequence for all pixel values in each channel
+
+    print("Image reduced from {w}x{h} to R:{rw}x{rh}, G:{gw}x{gh}, B:{bw}x{bh}".format(
+            w=image.size[0], h=image.size[0], rw=widths[0], rh = heights[0],
+            gw=widths[1], gh=heights[1], bw=widths[2], bh=heights[2]))
+
+    return flat_channels
+
+    # temp code to save 3 channels into an image, assuming all channels are the same length.
     # pixels = zip(*flat_channels) # A list of tuples containing (R, G, B)
     # pixels = [(int(p1), int(p2), int(p3)) for p1, p2, p3 in pixels] # Integerize the tuples
     # image = pil.new('RGB', (width, height)) # Create a new destination image for the pixels
@@ -138,8 +151,53 @@ CMD_DICT = {
 
 def main(args):
     global Image, reduce_S
+
     Image = get_image()
-    channels = get_channels(Image)
+
+    print("Task 1")
+    print("================")
+    # Task 1: reduce data for each channel
+    reduce_S = get_reduce_S()
+    reduced_channels = reduce_delegate(Image)
+    print("================")
+
+    print("Task 2")
+    print("================")
+    # Task 2: quantization of the channels into bins
+    t2_output = quantization_delegate(Image, reduced_channels)
+    print("================")
+
+    print("Task 3")
+    print("================")
+    # TODO: What is the output of Task 2 and what does Task 3 require as input?
+    # Task 3: Predictive coding
+    t3_output = predict_delegate(Image, t2_output)
+    print("================")
+
+    print("Task 4")
+    print("================")
+    # TODO: What is the output of Task 3 and what does Task 4 require as input?
+    # Task 4: Error quantization
+    t4_output = error_delegate(Image, t3_output)
+    print("================")
+
+    print("Task 5")
+    print("================")
+    # TODO: What is the output of Task 4 and what does Task 5 require as input?
+    # Task 5: Encoding scheme
+    t5_output = encoding_delegate(Image, t4_output)
+    print("================")
+
+    print("Task 6")
+    print("================")
+    # Task 6: Output
+    output_delegate(t5_output)
+    print("================")
+
+
+def main_old(args):
+    global Image, reduce_S
+    Image = get_image()
     reduce_S = get_reduce_S()
     while True:
         # Accept a command with args from the user (and split into a list)
@@ -164,7 +222,7 @@ def main(args):
             print('Invalid command "{cmd}".  Valid commands: {cmds}'.format(cmd=cmd, cmds=', '.join(sorted(CMD_DICT.keys()))))
             continue
         # At this point, cmd is a valid command.
-        CMD_DICT[cmd](Image, channels[:], *args)
+        CMD_DICT[cmd](Image, *args)
 
     # display(Image)
 

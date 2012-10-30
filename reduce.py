@@ -5,7 +5,7 @@ from math import ceil, floor
 def get_square(channel, width, left, sq_width, top, sq_height):
     rows = []
     for i in range(sq_height):
-        rows.extend(channel[((top + i) * width) + left : ((top + i) * width) + min(left + sq_width, width)])
+        rows.extend(channel[((top + i) * width) + left : ((top + i) * width) + (left + sq_width)])
     return rows
 
 def reduce_channel(channel, width, sx, sy):
