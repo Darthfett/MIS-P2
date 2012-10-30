@@ -1,1 +1,4 @@
 *.pyc
+
+#Glenn's bat file. Only works from his computer (directories are different on my computer)
+run.bat

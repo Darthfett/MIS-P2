@@ -80,6 +80,13 @@ def display(image, *args):
     image.show()
 
 def encoding_delegate(image, *args):
+    """
+    Will need to get an array that contains: 
+        1. a value informing what encoding is needed.
+        2. an array of values to encode. Assuming RGB values.
+
+    Will return an array with encoded values.
+    """
     pass
 
 def error_delegate(image, *args):
