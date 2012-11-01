@@ -11,12 +11,7 @@ def quantize(color_channels, N=((None,)*3)): # Default values of None to indicat
     c2New = calcquant(c2, n2)
     c3New = calcquant(c3, n3)
 
-    if not any({n1, n2, n3}):
-        return c1, c2, c3
-    else:
-        return c1New, c2New, c3New
-
-    raise NotImplementedError("TODO: Implement uniform quantization functionality")
+    return c1New, c2New, c3New
 
 def calcquant(channel, numBins):
     values = range(0, 256)
@@ -26,6 +21,10 @@ def calcquant(channel, numBins):
 
     #bins is actually just a list of key:value pairs that maps the actual error value
     #as a key to the new quantized value
+
+    if numBins is None:
+        return channel
+
     binsize = math.floor(len(values)/numBins)
     offset = math.floor(binsize/2)
 

@@ -69,6 +69,26 @@ def get_reduce_S():
     S = tuple((s if s is not None else reduce_S[i]) for i, s in enumerate(s_val))
     return tuple(map(tuple, (S[0:2], S[2:4], S[4:6])))
 
+def get_quantization_bins():
+    prompt = "Number of bins to quantize {} channel: "
+    bin_str = ['red', 'blue', 'green']
+
+    bin_vals = []
+    for str_ in bin_str:
+        bin_val = None
+        while bin_val is None:
+            bin_input = raw_input(prompt.format(str_))
+            if not bin_input:
+                break
+            if int(bin_input) > 0:
+                bin_val = int(bin_input)
+            else:
+                print('Invalid {} value'.format(str_))
+        bin_vals.append(bin_val)
+
+    return bin_vals
+
+
 # Command functions
 
 def display(image, *args):
@@ -103,14 +123,20 @@ def predict_delegate(image, *args):
     pass
 
 def quantization_delegate(image, channels, *args):
-    pass
+    bins = get_quantization_bins()
+
+    quantized_channels = quantization.quantize(channels, bins)
+
+    return quantized_channels
 
 def reduce_delegate(image, *args):
     channels = get_channels(Image)
     new_channels = reduce.reduce(channels, image.size[0], reduce_S)
     heights = [len(ch) for ch in new_channels]
     widths = [len(channel[0]) for channel in new_channels] # width of new image
-    flat_channels = list(map(it.chain.from_iterable, new_channels)) # a single flat sequence for all pixel values in each channel
+
+    flat_channels = [list(it.chain.from_iterable(ch)) for ch in new_channels]
+    flat_channels = [[int(px) for px in ch] for ch in flat_channels]
 
     print("Image reduced from {w}x{h} to R:{rw}x{rh}, G:{gw}x{gh}, B:{bw}x{bh}".format(
             w=image.size[0], h=image.size[1], rw=widths[0], rh = heights[0],
