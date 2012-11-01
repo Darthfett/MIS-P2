@@ -108,12 +108,12 @@ def quantization_delegate(image, channels, *args):
 def reduce_delegate(image, *args):
     channels = get_channels(Image)
     new_channels = reduce.reduce(channels, image.size[0], reduce_S)
-    heights = list(map(len, new_channels)) # height of new image
+    heights = [len(ch) for ch in new_channels]
     widths = [len(channel[0]) for channel in new_channels] # width of new image
     flat_channels = list(map(it.chain.from_iterable, new_channels)) # a single flat sequence for all pixel values in each channel
 
     print("Image reduced from {w}x{h} to R:{rw}x{rh}, G:{gw}x{gh}, B:{bw}x{bh}".format(
-            w=image.size[0], h=image.size[0], rw=widths[0], rh = heights[0],
+            w=image.size[0], h=image.size[1], rw=widths[0], rh = heights[0],
             gw=widths[1], gh=heights[1], bw=widths[2], bh=heights[2]))
 
     return flat_channels
