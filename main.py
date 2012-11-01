@@ -119,8 +119,15 @@ def help(image, *args):
 def output_delegate(image, *args):
     pass
 
-def predict_delegate(image, *args):
-    pass
+def predict_delegate(image, t2_output, widths, heights, *args):
+    #########
+    # Wesley
+    #########
+    predict_type = raw_input("Type of prediction: ") # type is a string
+
+    # Need to validate predict_type as a valid integer (use a while loop to continue asking user?  See get_quantization_bins for example
+
+    # Call pe.predict_encoding with values
 
 def quantization_delegate(image, channels, *args):
     bins = get_quantization_bins()
@@ -142,7 +149,7 @@ def reduce_delegate(image, *args):
             w=image.size[0], h=image.size[1], rw=widths[0], rh = heights[0],
             gw=widths[1], gh=heights[1], bw=widths[2], bh=heights[2]))
 
-    return flat_channels
+    return flat_channels, widths, heights
 
     # temp code to save 3 channels into an image, assuming all channels are the same length.
     # pixels = zip(*flat_channels) # A list of tuples containing (R, G, B)
@@ -184,7 +191,7 @@ def main(args):
     print("================")
     # Task 1: reduce data for each channel
     reduce_S = get_reduce_S()
-    reduced_channels = reduce_delegate(Image)
+    reduced_channels, new_widths, new_heights = reduce_delegate(Image)
     print("================")
 
     print("Task 2")
@@ -197,7 +204,7 @@ def main(args):
     print("================")
     # TODO: What is the output of Task 2 and what does Task 3 require as input?
     # Task 3: Predictive coding
-    t3_output = predict_delegate(Image, t2_output)
+    t3_output = predict_delegate(Image, t2_output, new_widths, new_heights)
     print("================")
 
     print("Task 4")
