@@ -2,16 +2,20 @@ from math import sqrt
 from PIL import Image
 
 
-def reconstruct_image(r,g,b,width,height,choice):
+def reconstruct_image(r_g_b, widths, heights, choice):
     '''
     Parameters are same as predict_encoding, but the 3 channels are those to which the predictor has already been applied.
     This returns a tupel representing the pixels of the image reconstructed using the prediction algorithm and the 
     error values stored in r, g, and b
     '''
-    r_re = reconstruct(r, width, height, choice)
-    g_re = reconstruct(g, width, height, choice)
-    b_re = reconstruct(b, width, height, choice)
-    z_re = zip(r_re, g_re, b_re)
+    r, g, b = r_g_b
+    r_width, g_width, b_width = widths
+    r_height, g_height, b_height = heights
+    r_re = reconstruct(r, r_width, r_height, choice)
+    g_re = reconstruct(g, g_width, g_height, choice)
+    b_re = reconstruct(b, b_width, b_height, choice)
+    #z_re = zip(r_re, g_re, b_re)
+    z_re = (r_re, g_re, b_re)
     return z_re
 def predict_encoding(r_g_b, widths, heights, choice):
     '''
@@ -24,14 +28,14 @@ def predict_encoding(r_g_b, widths, heights, choice):
     Don't know whether to return predicted image, or list of error values calculated while predicting. I think the latter,
     though.
     '''
-
     r, g, b = r_g_b
     r_width, g_width, b_width = widths
     r_height, g_height, b_height = heights
     r_errors, r_predicted = predict(r, r_width, r_height, choice)
     g_errors, g_predicted = predict(g, g_width, g_height, choice)
     b_errors, b_predicted = predict(b, b_width, b_height, choice)
-    z_new = zip (r_errors,g_errors,b_errors)
+    #z_new = zip (r_errors,g_errors,b_errors)
+    z_new = (r_errors, g_errors, b_errors)
     return z_new    
     
 
@@ -212,9 +216,9 @@ def reconstruct (r, width, height, choice):
     
     return (return_list)
 
-
-##Testing:
 '''
+##Testing:
+
 im = Image.open('blue_gradient.jpg')
 pixList = list(im.getdata())
 r,g,b = zip(*pixList)
@@ -225,12 +229,16 @@ t3 = (7,8,9,4,5,6,1,2,3)
 t4 = (t1,t2,t3)
 widths = (3,3,3)
 heights = (2,3,3)
-
+p_choice = 4
 #new_list = predict_encoding(r, g, b, width, height, 8)
-new_list = predict_encoding(t4,widths,heights,4)
-t1,t2,t3 = zip(*new_list)
-print t1,t2,t3
-#final_list = reconstruct_image(t1,t2,t3,3,3,7)
-#t1,t2,t3 = zip(*final_list)
-#print t1,t2,t3
+print "original t1, t2, t3:", t1, t2, t3
+new_list = predict_encoding(t4,widths,heights,p_choice)
+t1,t2,t3 = new_list
+print "new_list: ", new_list
+print "predicted t1,t2,t3: ", t1,t2,t3
+final_list = reconstruct_image(new_list,widths,heights,p_choice)
+t1,t2,t3 = final_list
+print "reconstructed t1, t2, t3:", t1,t2,t3
+print final_list
+#
 '''
