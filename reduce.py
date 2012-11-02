@@ -2,6 +2,16 @@ from __future__ import division
 
 from math import ceil, floor
 
+import itertools as it
+from itertools import izip_longest
+
+def grouper(n, iterable, fillvalue=None):
+    "Collect data into fixed-length chunks or blocks"
+    # grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx
+    args = [iter(iterable)] * n
+    return list(izip_longest(fillvalue=fillvalue, *args))
+
+
 def get_square(channel, width, left, sq_width, top, sq_height):
     rows = []
     for i in range(sq_height):
@@ -38,12 +48,17 @@ def reduce(color_channels, width, S=((None, None), (None, None), (None, None))):
     """
     c1, c2, c3 = color_channels
 
+
+
     if not all(s for SI in S for s in SI):
         raise ValueError("Cannot reduce resolution by a None value.")
         # return c1, c2, c3
 
     if any(s <= 0 for SI in S for s in SI):
         raise ValueError("Cannot reduce resolution by a negative or 0 value.")
+
+    if all(s == 1 for s_i in S for s in s_i):
+        return grouper(width, c1), grouper(width, c2), grouper(width, c3)
 
     s1, s2, s3 = S
 
