@@ -131,7 +131,7 @@ def predict_delegate(image, t2_output, widths, heights, *args):
         except ValueError:
             predict_type = -1
         if (predict_type<1 or predict_type>8):
-            print "invalid input"
+            print ("invalid input")
     predictive_encoding.predict_encoding(t2_output, widths, heights, predict_type)
     
 
