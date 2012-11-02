@@ -31,11 +31,17 @@ select: select a new image
 Image = None
 reduce_S = (None, None, None, None, None, None) # holds s1x, s1y, s2x, s2y, s3x, s3y values
 
+def RGB_to_YCbCr(r, g, b):
+    y =  0.299 * r +  0.587 * g +  0.144 * b
+    cb = -0.168736 * r + -0.331264 * g + 0.5 * b + 0.5
+    cr = 0.5 * r + -0.418688 * g + -0.081312 * b + 0.5
+    return (y, cb, cr)
+
 def get_channels(image):
-    """Get a list of tuples containing the reds, greens, and blues of the image."""
-    RGB = image.getdata()
-    r, g, b = zip(*RGB) # matrix transform
-    return r, g, b
+    """Get a list of tuples containing the Ys, Cbs, and Crs of the image."""
+    YCbCr = [RGB_to_YCbCr(*pix) for pix in image.getdata()]
+    Y, Cb, Cr = zip(*YCbCr) # matrix transform
+    return Y, Cb, Cr
 
 def get_image():
     image = None
