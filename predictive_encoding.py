@@ -13,9 +13,9 @@ def reconstruct_image(r,g,b,width,height,choice):
     b_re = reconstruct(b, width, height, choice)
     z_re = zip(r_re, g_re, b_re)
     return z_re
-def predict_encoding(r, g, b, width, height, choice):
+def predict_encoding(r, g, b, widths, heights, choice):
     '''
-    Parameters are 3 lists of values representing the 3 channels of an image, the width and height of the original image,
+    Parameters are 3 lists of values representing the 3 channels of an image, the widths and heights of the compressed channels,
     and an integer representing the choice for prediction algorithm. This function returns a pixel list 
     (list of 3-tuples of r,g,b values).
     It does this by getting the pixel list, separating it into 3 color channels, then for each color channel calling the
@@ -28,34 +28,13 @@ def predict_encoding(r, g, b, width, height, choice):
     '''pixList = list(im.getdata())
     r,g,b = zip(*pixList)
     height, width = im.size'''
-    r_errors, r_predicted = predict(r, width, height, choice)
-    g_errors, g_predicted = predict(g, width, height, choice)
-    b_errors, b_predicted = predict(b, width, height, choice)
+    r_width, g_width, b_width = widths
+    r_height, g_height, b_height = heights
+    r_errors, r_predicted = predict(r, r_width, r_height, choice)
+    g_errors, g_predicted = predict(g, g_width, g_height, choice)
+    b_errors, b_predicted = predict(b, b_width, b_height, choice)
     z_new = zip (r_errors,g_errors,b_errors)
-    return z_new
-    ''' r_new = predict(r, width, height, choice)
-    g_new = predict(g, width, height, choice)
-    b_new = predict(b, width, height, choice)'''
-    #print r_new
-    
-    '''
-    the following is if errors are supposed to be calculated at the end of predictions:
-    
-    r_errors = []
-    g_errors = []
-    b_errors = []
-    length = len(r)
-    for i in range (length):
-        r_errors.append(r_new[i]-r[i])
-        g_errors.append(g_new[i]-g[i])
-        b_errors.append(b_new[i]-b[i])
-    '''
-    #print "r_errors:", r_errors
-    #print "g_new:", g_new
-    #print "b_new:", b_new
-    #print "r_new:", r_new
-    #print "r: ", r
-    
+    return z_new    
     
 
 
@@ -225,10 +204,6 @@ def reconstruct (r, width, height, choice):
                 else:
                     table[row][column] = (a+b)/2 - table[row][column]
     
-    else:
-        #Haven't decided how to handle bad input
-        #error: bad input
-        print "error"##
         
     return_list = []
     for row in range (0, height): #Go through table in order, and add all values to return_list
