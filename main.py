@@ -123,7 +123,16 @@ def predict_delegate(image, t2_output, widths, heights, *args):
     #########
     # Wesley
     #########
-    predict_type = raw_input("Type of prediction: ") # type is a string
+    predict_type = -1
+    while (predict_type<1 or predict_type>8):
+        predict_type = raw_input("type of prediction (integer 1-8): ")
+        try:
+            predict_type = int(predict_type)
+        except ValueError:
+            predict_type = -1
+        if (predict_type<1 or predict_type>8):
+            print "invalid input"
+    
 
     # Need to validate predict_type as a valid integer (use a while loop to continue asking user?  See get_quantization_bins for example
 
