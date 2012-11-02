@@ -123,6 +123,8 @@ def help(image, *args):
     print(HELP)
 
 def output_delegate(image, *args):
+    with open('test.YBR', 'wb') as out:
+        out.write(str(args[0]))
     pass
 
 def predict_delegate(image, t2_output, widths, heights, *args):
@@ -245,7 +247,7 @@ def main(args):
     print("Task 6")
     print("================")
     # Task 6: Output
-    output_delegate(t5_output)
+    output_delegate(Image, t5_output)
     print("================")
 
 
