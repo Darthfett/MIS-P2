@@ -27,11 +27,7 @@ def predict_encoding(r_g_b, widths, heights, choice):
 
     r, g, b = r_g_b
     r_width, g_width, b_width = widths
-    print "r_width: ", r_width#testing
     r_height, g_height, b_height = heights
-    print "r_height: ", r_height;#
-    #print "r: ", r
-    print "len(r): ", len(r)#
     r_errors, r_predicted = predict(r, r_width, r_height, choice)
     g_errors, g_predicted = predict(g, g_width, g_height, choice)
     b_errors, b_predicted = predict(b, b_width, b_height, choice)
