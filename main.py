@@ -126,6 +126,10 @@ def predict_delegate(image, t2_output, widths, heights, *args):
     predict_type = -1
     while (predict_type<1 or predict_type>8):
         predict_type = raw_input("type of prediction (integer 1-8): ")
+        if not predict_type:
+            # Default choice is to do no predictive coding (original values)
+            predict_type = 1
+            break
         try:
             predict_type = int(predict_type)
         except ValueError:
