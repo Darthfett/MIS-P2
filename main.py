@@ -132,6 +132,7 @@ def predict_delegate(image, t2_output, widths, heights, *args):
             predict_type = -1
         if (predict_type<1 or predict_type>8):
             print "invalid input"
+    predictive_encoding.predict_encoding(t2_output, widths, heights, predict_type)
     
 
     # Need to validate predict_type as a valid integer (use a while loop to continue asking user?  See get_quantization_bins for example
