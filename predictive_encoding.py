@@ -13,9 +13,9 @@ def reconstruct_image(r,g,b,width,height,choice):
     b_re = reconstruct(b, width, height, choice)
     z_re = zip(r_re, g_re, b_re)
     return z_re
-def predict_encoding(r, g, b, widths, heights, choice):
+def predict_encoding(r_g_b, widths, heights, choice):
     '''
-    Parameters are 3 lists of values representing the 3 channels of an image, the widths and heights of the compressed channels,
+    Parameters are a tuple of 3 lists of values representing the 3 channels of an image, the widths and heights of the compressed channels,
     and an integer representing the choice for prediction algorithm. This function returns a pixel list 
     (list of 3-tuples of r,g,b values).
     It does this by getting the pixel list, separating it into 3 color channels, then for each color channel calling the
@@ -25,9 +25,7 @@ def predict_encoding(r, g, b, widths, heights, choice):
     though.
     '''
 
-    '''pixList = list(im.getdata())
-    r,g,b = zip(*pixList)
-    height, width = im.size'''
+    r, g, b = r_g_b
     r_width, g_width, b_width = widths
     r_height, g_height, b_height = heights
     r_errors, r_predicted = predict(r, r_width, r_height, choice)
