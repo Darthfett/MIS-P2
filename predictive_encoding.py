@@ -27,7 +27,11 @@ def predict_encoding(r_g_b, widths, heights, choice):
 
     r, g, b = r_g_b
     r_width, g_width, b_width = widths
+    print "r_width: ", r_width#testing
     r_height, g_height, b_height = heights
+    print "r_height: ", r_height;#
+    #print "r: ", r
+    print "len(r): ", len(r)#
     r_errors, r_predicted = predict(r, r_width, r_height, choice)
     g_errors, g_predicted = predict(g, g_width, g_height, choice)
     b_errors, b_predicted = predict(b, b_width, b_height, choice)
@@ -41,9 +45,10 @@ def predict (r, width, height, choice):
     given a list (tuple?) of values of 1 channel of an image, the width and height of the image, and the choice of prediction algorithm,
     return the list of values in this channel with the prediction algorithm applied.
     '''
-    table = [[0 for i in range(height)]for j in range (width)]
-    table_o = [[0 for i in range(height)]for j in range (width)]
-    table_e = [[0 for i in range(height)]for j in range (width)]
+    table = [[0 for i in range(width)]for j in range (height)]
+    table_o = [[0 for i in range(width)]for j in range (height)]
+    table_e = [[0 for i in range(width)]for j in range (height)]
+    
     # Creates 2 tables with (height) rows and (width) columns with all values initialized to 0
     # table_o (original) will hold original values from the list given
     # table_e (errors) will hold the error values. 
@@ -150,7 +155,7 @@ def predict (r, width, height, choice):
     
 def reconstruct (r, width, height, choice):
 
-    table = [[0 for i in range(height)]for j in range (width)]
+    table = [[0 for i in range(width)]for j in range (height)]
     # Creates a table with (height) rows and (width) columns with all values initialized to 0
             
     for d1 in range (height):
@@ -211,23 +216,25 @@ def reconstruct (r, width, height, choice):
     
     return (return_list)
 
-'''
+
 ##Testing:
+'''
 im = Image.open('blue_gradient.jpg')
 pixList = list(im.getdata())
 r,g,b = zip(*pixList)
 height, width = im.size
-t1 = (1,2,3,4,5,6,7,8,9)
+t1 = (1,2,3,4,5,6)
 t2 = (9,8,7,6,5,4,3,2,1)
 t3 = (7,8,9,4,5,6,1,2,3)
+t4 = (t1,t2,t3)
+widths = (3,3,3)
+heights = (2,3,3)
 
 #new_list = predict_encoding(r, g, b, width, height, 8)
-new_list = predict_encoding(t1,t2,t3,3,3,7)
+new_list = predict_encoding(t4,widths,heights,4)
 t1,t2,t3 = zip(*new_list)
 print t1,t2,t3
-final_list = reconstruct_image(t1,t2,t3,3,3,7)
-t1,t2,t3 = zip(*final_list)
-print t1,t2,t3
+#final_list = reconstruct_image(t1,t2,t3,3,3,7)
+#t1,t2,t3 = zip(*final_list)
+#print t1,t2,t3
 '''
-
-#
