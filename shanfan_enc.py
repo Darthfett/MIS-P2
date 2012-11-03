@@ -1,5 +1,4 @@
-
-class Sf_Entry:    #defines a coded value entry for a Shannon-Fano table
+class Sf_Entry: #defines a coded value entry for a Shannon-Fano table
     def __init__( self):
         self.val = -1
         self.freq = 0
@@ -11,7 +10,7 @@ class Sf_Entry:    #defines a coded value entry for a Shannon-Fano table
         self.code = ""
 
     def __repr__(self):
-        return '\n[val: {0} [{0:08b}b]\t| freq: {1}\t| code: {2}]'.format(self.val, self.freq, self.code)
+        return '\n[val: {0} [<0:08b>b]\t| freq: {1}\t| code: {2}]'.format(self.val, self.freq, self.code)
 
     #use to get the code in binary format
     def getCode( self):
@@ -29,7 +28,7 @@ class Sf_Entry:    #defines a coded value entry for a Shannon-Fano table
     def incrFreq( self):
         self.freq = self.freq + 1
 
-class LZWCode:    #defines a coded value entry for a LZW table
+class LZWCode:  #defines a coded value entry for a LZW table
     def __init__( self):
         self.color = []
         self.out_code = ""
@@ -50,7 +49,7 @@ def shanfan_encode( chan):
     tbl = evaluateFrequencies( chan)
     #sort table by frequency
     tbl_2 = sort(tbl, False)
-    
+
     #division/coding
     tbl_3 = segmentTable( tbl_2)
     ##print("\n\t\t\t== Code Table ==\n")
@@ -62,7 +61,7 @@ def shanfan_encode( chan):
     ##print( tbl_4)
     return tbl_4, tbl_3
 
-def shanfan_decode(chan, decTbl):
+def shanfan_decode(chan, *decTbl):
     decodedChan = ""
     buffr = ''
     for code in chan:
@@ -78,7 +77,7 @@ def encodeShannonFanno(chan, codTbl):
     codedChan = ""
     for val in chan:
         for entry in codTbl:
-            if(val == entry.val):
+            if(val == entry.val and int(val) <= 256):
                 codedChan += entry.getCode()
                 break
     return codedChan
@@ -86,15 +85,16 @@ def encodeShannonFanno(chan, codTbl):
 #evaluate list of colors
 def evaluateFrequencies( chan):
     v_list = []             #for tracking colors seen in 'chan'
-    sf_entArr = []            #list of Color Entries. Recall that ColorEntry tracks frequency
-        
+    sf_entArr = []          #list of Color Entries. Recall that ColorEntry tracks frequency
+
     for val in chan:        #for each color listing in chan
-        if( val not in v_list):
+        if( val not in v_list and int(val) <= 256):
             v_list.append( val)         #track this val
-            sf_ent = Sf_Entry(val)            #start new val entry
-            sf_entArr.append( sf_ent)    #add val entry to list
+            sf_ent = Sf_Entry(val)          #start new val entry
+            sf_entArr.append( sf_ent)       #add val entry to list
             ##print( 'Found new val:{0}'.format( val))
-        sf_entArr[ v_list.index( val)].incrFreq()    #increase frequency
+        if(val in v_list):
+            sf_entArr[ v_list.index( val)].incrFreq()       #increase frequency
 
     return sf_entArr
 
@@ -114,7 +114,7 @@ def sort( arr, ascending):
             upper.append( sf_ent)
         else:
             lower.append( sf_ent)
-    
+
     if(ascending):
         arrOut.extend( sort( lower, ascending))
         arrOut.append( pivot)
@@ -123,7 +123,7 @@ def sort( arr, ascending):
         arrOut.extend( sort( upper, ascending))
         arrOut.append( pivot)
         arrOut.extend( sort( lower, ascending))
-        
+
     #print("\nIter on length {0}, done. Returning this:".format(len(arr)))
     #print (arrOut)
     return arrOut
@@ -140,19 +140,19 @@ def segmentTable( tbl):
     botsum = 0
     for shafa_code in tbl_buffer:
         allsum = allsum + shafa_code.freq
-    ##print('========================\n\nSum of all frequencies = {0}\n'.format(allsum))    
-    
+    ##print('========================\n\nSum of all frequencies = {0}\n'.format(allsum))
+
     #break table into two segments with roughly equal frequency sums
     while(topsum < allsum // 2) and (len( tbl_buffer) > 0):
         buffer0 = tbl_buffer[0]
         topsum += buffer0.freq
-        top_tbl.append( tbl_buffer.pop( 0))    #push Code Entry to top list
-    ##    print(top_tbl)
+        top_tbl.append( tbl_buffer.pop( 0))     #push Code Entry to top list
+    ##      print(top_tbl)
     #do the same with bottom segment, if bottom segment 'sum < halfSumAllFrequencies'. these tables will be roughly equal
     while(botsum < allsum // 2) and (len( tbl_buffer) > 0):
         buffer1 = tbl_buffer[0] #pop another element off the list. We're nwo in lower table's half pretty much.
         botsum += buffer1.freq
-        bot_tbl.append( tbl_buffer.pop( 0))    #push Code Entry to top list
+        bot_tbl.append( tbl_buffer.pop( 0))     #push Code Entry to top list
         if(botsum > allsum):
             lastInd = len( top_tbl) - 1
             lastTopEntry = top_tbl[ lastInd]
@@ -161,16 +161,15 @@ def segmentTable( tbl):
         #check if last entry from top segment plus bottom sum is greater than half the total sum.
 
     for entry in top_tbl:
-    ##    print("\n{0} Appended 0".format( entry.printColor()))
+    ##      print("\n{0} Appended 0".format( entry.printColor()))
         entry.appendToCode(0) #left shift top codes and set LSB to 0
     for entry in bot_tbl:
-    ##    print("\n{0} Appended 1".format( entry.printColor()))
+    ##      print("\n{0} Appended 1".format( entry.printColor()))
         entry.appendToCode(1) #left shift top codes and set LSB to 1
-    
+
     if len(top_tbl) > 1:
         top_tbl = segmentTable( top_tbl)
     if len(bot_tbl) > 1:
         bot_tbl = segmentTable( bot_tbl)
     top_tbl.extend(bot_tbl)
     return top_tbl
-    
