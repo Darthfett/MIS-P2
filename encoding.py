@@ -24,7 +24,7 @@ def encode( chan, opcode):
     if( opcode == ENCODING_SCHEME_VARLEN):
         return shanfan_encode(chan)
     if( opcode == ENCODING_SCHEME_DICT):
-        return lzw_decode(chan)
+        return lzw_encode(chan)
     else:
         return chan
 
