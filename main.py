@@ -151,13 +151,9 @@ def encoding_delegate(image, channels, *args):
 
         scheme = scheme_int
 
-    # t5_output = [[str(s) for s in ch] for ch in channels]
-
     t5_output = channels
     t5_output = [encoding.encode(channel, scheme) for channel in t5_output]
-    t5_output = [encoding.decode(encoding, scheme) for encoding in t5_output]
-
-    # t5_output = [[int(s) for s in ch] for ch in t5_output]
+    t5_output = [encoding.decode(enc, scheme) for enc in t5_output]
 
     return t5_output
 

@@ -24,14 +24,17 @@ def encode( chan, opcode):
     if( opcode == ENCODING_SCHEME_VARLEN):
         return shanfan_encode(chan)
     if( opcode == ENCODING_SCHEME_DICT):
+        chan = [str(s) for s in chan]
         return lzw_encode(chan)
     else:
         return chan
 
 def decode( chan, opcode):
     if( opcode == ENCODING_SCHEME_VARLEN):
-        return shanfan_encode(chan)
+        return shanfan_decode(chan)
     if( opcode == ENCODING_SCHEME_DICT):
-        return lzw_decode(chan)
+        result = lzw_decode(chan)
+        result = [int(s) for s in result]
+        return result
     else:
         return chan
