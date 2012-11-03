@@ -32,6 +32,7 @@ Image = None
 reduce_S = (None, None, None, None, None, None) # holds s1x, s1y, s2x, s2y, s3x, s3y values
 
 def RGB_to_YCbCr(r, g, b):
+    return (r, g, b) # For debugging
     r /= 255
     g /= 255
     b /= 255
@@ -122,7 +123,7 @@ def display(image, *args):
     """
     image.show()
 
-def encoding_delegate(image, *args):
+def encoding_delegate(image, channels, *args):
     """
     Will need to get an array that contains:
         1. a value informing what encoding is needed.
@@ -130,7 +131,30 @@ def encoding_delegate(image, *args):
 
     Will return an array with encoded values.
     """
-    pass
+
+    scheme = None
+    while scheme is None:
+        scheme_input = raw_input("Choose encoding scheme (2: Shannon Fanno, 3: LZW): ")
+
+        if not scheme_input:
+            break
+
+        try:
+            scheme_int = int(scheme_input)
+        except ValueError:
+            print("Invalid input")
+            continue
+
+        if scheme_int not in (1, 2, 3):
+            print("Invalid input")
+            continue
+
+        scheme = scheme_int
+
+
+    t5_output = [encoding.encode(channel, scheme) for channel in channels]
+
+    return t5_output
 
 def error_delegate(image, error, *args):
     bins = None
@@ -149,7 +173,7 @@ def error_delegate(image, error, *args):
         if int(bin_input) < 1:
             print("Invalid input")
             continue
-        else
+        else:
             bins = int(bin_input)
 
     t4_output = eq.error_quantization(image, error, bins)
