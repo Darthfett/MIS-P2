@@ -151,8 +151,13 @@ def encoding_delegate(image, channels, *args):
 
         scheme = scheme_int
 
+    # t5_output = [[str(s) for s in ch] for ch in channels]
 
-    t5_output = [encoding.encode(channel, scheme) for channel in channels]
+    t5_output = channels
+    t5_output = [encoding.encode(channel, scheme) for channel in t5_output]
+    t5_output = [encoding.decode(encoding, scheme) for encoding in t5_output]
+
+    # t5_output = [[int(s) for s in ch] for ch in t5_output]
 
     return t5_output
 
@@ -188,9 +193,6 @@ def output_delegate(image, *args):
     pass
 
 def predict_delegate(image, t2_output, widths, heights, *args):
-    #########
-    # Wesley
-    #########
     predict_type = -1
     while (predict_type<1 or predict_type>8):
         predict_type = raw_input("Type of prediction (integer 1-8): ")
@@ -202,7 +204,7 @@ def predict_delegate(image, t2_output, widths, heights, *args):
             predict_type = int(predict_type)
         except ValueError:
             predict_type = -1
-        if (predict_type<1 or predict_type>8):
+        if (predict_type < 1 or predict_type > 8):
             print("Invalid input")
     predicted_channels = pe.predict_encoding(t2_output, widths, heights, predict_type)
     return predicted_channels
