@@ -32,9 +32,12 @@ Image = None
 reduce_S = (None, None, None, None, None, None) # holds s1x, s1y, s2x, s2y, s3x, s3y values
 
 def RGB_to_YCbCr(r, g, b):
-    y =  0.299 * r +  0.587 * g +  0.144 * b
-    cb = -0.168736 * r + -0.331264 * g + 0.5 * b + 0.5
-    cr = 0.5 * r + -0.418688 * g + -0.081312 * b + 0.5
+    r /= 255
+    g /= 255
+    b /= 255
+    y =  int((0.299 * r +  0.587 * g +  0.144 * b) * 255)
+    cb = int((-0.168736 * r + -0.331264 * g + 0.5 * b + 0.5) * 255)
+    cr = int((0.5 * r + -0.418688 * g + -0.081312 * b + 0.5) * 255)
     return (y, cb, cr)
 
 def get_channels(image):
