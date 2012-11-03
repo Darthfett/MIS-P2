@@ -30,7 +30,7 @@ def encode( chan, opcode):
 
 def decode( chan, opcode):
     if( opcode == ENCODING_SCHEME_VARLEN):
-        return shanfan_encode(chan)
+        return shanfan_decode(chan)
     if( opcode == ENCODING_SCHEME_DICT):
         return lzw_decode(chan)
     else:
