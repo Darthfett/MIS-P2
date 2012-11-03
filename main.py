@@ -68,10 +68,17 @@ def get_reduce_S():
             if not s_input:
                 s = 1
                 break
+
+            try:
+                int(s_input)
+            except ValueError:
+                print("Invalid input")
+                continue
+
             if int(s_input) != 0:
                 s = int(s_input)
             else:
-                print('Invalid {} value'.format(str_))
+                print("Invalid input")
         s_val.append(s)
 
     # default values to reduce_S values if the user enters ''
@@ -89,10 +96,16 @@ def get_quantization_bins():
             bin_input = raw_input(prompt.format(str_))
             if not bin_input:
                 break
+            try:
+                int(bin_input)
+            except ValueError:
+                print("Invalid input")
+                continue
+
             if int(bin_input) > 0:
                 bin_val = int(bin_input)
             else:
-                print('Invalid {} value'.format(str_))
+                print("Invalid input")
         bin_vals.append(bin_val)
 
     return bin_vals
@@ -119,8 +132,28 @@ def encoding_delegate(image, *args):
     """
     pass
 
-def error_delegate(image, *args):
-    pass
+def error_delegate(image, error, *args):
+    bins = None
+    while bins is None:
+        bin_input = raw_input("Number of bins to quantize error: ")
+
+        if not bin_input:
+            break
+
+        try:
+            bin_int = int(bin_input)
+        except ValueError:
+            print("Invalid input")
+            continue
+
+        if int(bin_input) < 1:
+            print("Invalid input")
+            continue
+        else
+            bins = int(bin_input)
+
+    t4_output = eq.error_quantization(image, error, bins)
+    return t4_output
 
 def help(image, *args):
     print(HELP)
@@ -136,7 +169,7 @@ def predict_delegate(image, t2_output, widths, heights, *args):
     #########
     predict_type = -1
     while (predict_type<1 or predict_type>8):
-        predict_type = raw_input("type of prediction (integer 1-8): ")
+        predict_type = raw_input("Type of prediction (integer 1-8): ")
         if not predict_type:
             # Default choice is to do no predictive coding (original values)
             predict_type = 1
@@ -146,7 +179,7 @@ def predict_delegate(image, t2_output, widths, heights, *args):
         except ValueError:
             predict_type = -1
         if (predict_type<1 or predict_type>8):
-            print ("invalid input")
+            print("Invalid input")
     predicted_channels = pe.predict_encoding(t2_output, widths, heights, predict_type)
     return predicted_channels
 
