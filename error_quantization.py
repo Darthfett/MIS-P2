@@ -1,5 +1,5 @@
 import math
-def error_quantization(image, m=None):
+def error_quantization(image, error, m=None):
     """
     (Task 4): Given image as a list of values post-predictive coding, and m,
     perform uniform OR non-uniform quantization of the error into m bins.
@@ -13,6 +13,8 @@ def error_quantization(image, m=None):
     #           !!!  error value range:  [-255...0...255] = 511 possible values
     #    2)  if difference between bin's lower & upper,
     #           assign new difference value that is median between the two
+    if m is None:
+        return error
 
     values = range(-255, 256)
 
@@ -38,11 +40,8 @@ def error_quantization(image, m=None):
     #for speed, search for matching bin with binary search
     #needs to called recursively
     errorQuantized = list()
-    for i, pixel in enumerate(image):            # TODO::NEED TO OFFSET FOR INITIAL DATA
+    for i, pixel in enumerate(error):            # TODO::NEED TO OFFSET FOR INITIAL DATA
         errorQuantized.append(bins[pixel])  #bins[pixel] returns value, which is new error val
                                              #and is placed in new list
-    if m is None:
-        return error
 
     return errorQuantized
-    raise NotImplementedError("TODO: Implement error quantization functionality")
