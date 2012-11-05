@@ -184,7 +184,7 @@ def help(image, *args):
     print(HELP)
 
 def output_delegate(image, *args):
-    with open('test.YBR', 'wb') as out:
+    with open('../Output/test.YBR','wb') as out:
         out.write(str(args[0]))
     pass
 
