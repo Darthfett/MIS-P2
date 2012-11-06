@@ -39,7 +39,7 @@ def calcquant(channel, numBins):
             #print key, " :  ", bins[key]
             key = key + 1
             lowerbound = lowerbound + 1            
-            print "Median is ", median, "  lowerbound is  ", lowerbound, "  upperbound is ", upperbound
+            #print "Median is ", median, "  lowerbound is  ", lowerbound, "  upperbound is ", upperbound
         if(upperbound + binsize <= len(values)):
             upperbound = upperbound + binsize
             median = lowerbound + offset
@@ -56,14 +56,10 @@ def calcquant(channel, numBins):
         bins[key] = median
         key = key + 1
         lowerbound = lowerbound + 1
-        print key-1, " : ", bins[key-1]
-    print bins 
+        #print key-1, " : ", bins[key-1]
+    #print bins 
     quantized = list()
     #The original values of the channel, as received by method, act as keys
     #for retrieving the new representative value, which is the median of the bin
     for i, val in enumerate(channel):
-        #print "i is:  ", i
-        #print "val is:  ", val
-        #print "bins[val] is:  ", bins[val]
         quantized.append(bins[val])
-        #print quantized
