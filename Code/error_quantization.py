@@ -28,20 +28,31 @@ def error_quantization(image, error, m=None):
     key = -255
     median = lowerbound + offset
     upperbound = lowerbound + binsize
-    while(upperbound < len(range(-255, 256))):
+    while(upperbound + binsize <= len(values)):
         while(lowerbound < upperbound):
             bins[key] = median
+            #print key, " :  ", bins[key]
             key = key + 1
-            lowerbound = lowerbound + 1
-        upperbound = upperbound + binsize
-        median = lowerbound + offset
-
+            lowerbound = lowerbound + 1            
+            print "Median is ", median, "  lowerbound is  ", lowerbound, "  upperbound is ", upperbound
+        if(upperbound + binsize <= len(values)):
+            upperbound = upperbound + binsize
+            median = lowerbound + offset
+            
+    upperbound = len(values)
+    offset = (upperbound - lowerbound)/2
+    median = lowerbound + offset
+    
+    while (lowerbound < upperbound):
+        bins[key] = median
+        key = key + 1
+        lowerbound = lowerbound + 1
     #iterate through image, and replace error values with quantized values
     #for speed, search for matching bin with binary search
     #needs to called recursively
     errorQuantized = list()
-    for i, pixel in enumerate(error):            # TODO::NEED TO OFFSET FOR INITIAL DATA
-        errorQuantized.append(bins[pixel])  #bins[pixel] returns value, which is new error val
-                                             #and is placed in new list
+    for i, pixel in enumerate(error):            
+        errorQuantized.append(bins[pixel])  #bins[pixel] returns value, which is new 
+                                            #error val and is placed in new list
 
     return errorQuantized
