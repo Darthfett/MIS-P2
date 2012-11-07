@@ -52,7 +52,7 @@ def get_image():
     while image is None:
         image_path = raw_input("Select an image: ")
         if not image_path:
-            image_path = os.path.join(os.path.split(__file__)[0], "../", "Input", "test.png")
+            image_path = os.path.join(os.path.split(__file__)[0], "../", "Input", "test.bmp")
         try:
             image = pil.open(image_path)
         except Exception:
