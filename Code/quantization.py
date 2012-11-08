@@ -63,3 +63,4 @@ def calcquant(channel, numBins):
     #for retrieving the new representative value, which is the median of the bin
     for i, val in enumerate(channel):
         quantized.append(bins[val])
+    return quantized
