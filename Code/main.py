@@ -134,6 +134,8 @@ def encoding_delegate(image, channels, *args):
     Will return an array with encoded values.
     """
 
+    channels = [[int(r) for r in channel] for channel in channels]
+
     scheme = None
     while scheme is None:
         scheme_input = raw_input("Choose encoding scheme (2: Shannon Fanno, 3: LZW): ")
@@ -155,7 +157,7 @@ def encoding_delegate(image, channels, *args):
 
     t5_output = channels
     t5_output = [encoding.encode(channel, scheme) for channel in t5_output]
-    t5_output = [encoding.decode(enc, scheme) for enc in t5_output]
+    # t5_output = [encoding.decode(enc, scheme) for enc in t5_output]
 
     return t5_output
 
@@ -180,6 +182,7 @@ def error_delegate(image, error, *args):
             bins = int(bin_input)
 
     t4_output = eq.error_quantization(image, error, bins)
+    t4_output = [[max(min(i, 255), 0) for i in ch] for ch in t4_output]
     return t4_output
 
 def help(image, *args):
