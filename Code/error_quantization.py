@@ -4,7 +4,16 @@ def error_quantization(image, error, m=None):
     (Task 4): Given image as a list of values post-predictive coding, and m,
     perform uniform OR non-uniform quantization of the error into m bins.
     """
+    if m is None:
+        return error
+        
+    e1, e2, e3 = error    
+    
+    e1New = calcquant(e1, m)
+    e2New = calcquant(e2, m)
+    e3New = calcquant(e3, m)
 
+    return e1New, e2New, e3New
     #error quantization principle:  get the first value, and all following
     #information is the difference between the original and the predicted signal
     #predictive coding is done in previous task, so this task needs to
@@ -13,9 +22,8 @@ def error_quantization(image, error, m=None):
     #           !!!  error value range:  [-255...0...255] = 511 possible values
     #    2)  if difference between bin's lower & upper,
     #           assign new difference value that is median between the two
-    if m is None:
-        return error
 
+def calcquant(error, m):
     values = range(-255, 256)
 
     #bins is actually just a list of key:value pairs that maps the actual error value
@@ -34,7 +42,7 @@ def error_quantization(image, error, m=None):
             #print key, " :  ", bins[key]
             key = key + 1
             lowerbound = lowerbound + 1            
-            print "Median is ", median, "  lowerbound is  ", lowerbound, "  upperbound is ", upperbound
+            #print "Median is ", median, "  lowerbound is  ", lowerbound, "  upperbound is ", upperbound
         if(upperbound + binsize <= len(values)):
             upperbound = upperbound + binsize
             median = lowerbound + offset
@@ -53,6 +61,6 @@ def error_quantization(image, error, m=None):
     errorQuantized = list()
     for i, pixel in enumerate(error):            
         errorQuantized.append(bins[pixel])  #bins[pixel] returns value, which is new 
-                                            #error val and is placed in new list
+        #error val and is placed in new list
 
     return errorQuantized
