@@ -46,11 +46,9 @@ def int_seq_to_bytearray(seq, int_max_size):
     int_list = [int(''.join(x), 2) for x in grouper(8, bin_seq, '0')]
 
     return int_list
-    return bytearray(int_list)
 
 def bin_seq_to_bytearray(bin_seq):
     # pack the bits into bytes
     int_list = [int(''.join(x), 2) for x in grouper(8, bin_seq, '0')]
 
     return int_list
-    return bytearray(int_list)

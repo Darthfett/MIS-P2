@@ -1,4 +1,21 @@
+from __future__ import division
+
 import math
+
+from byte_packer import int_seq_to_bytearray
+
+def calcquant(channel, num_bins):
+    if not num_bins:
+        return channel
+
+    # Get amount covered by each bin
+    bin_size = int(math.ceil(512 / num_bins))
+
+    # Get bin for each value in channel
+    bin_vals = [int((i + 256) / bin_size) for i in channel]
+
+    return int_seq_to_bytearray(bin_vals, num_bins-1)
+
 def error_quantization(image, error, m=None):
     """
     (Task 4): Given image as a list of values post-predictive coding, and m,
@@ -6,9 +23,9 @@ def error_quantization(image, error, m=None):
     """
     if m is None:
         return error
-        
-    e1, e2, e3 = error    
-    
+
+    e1, e2, e3 = error
+
     e1New = calcquant(e1, m)
     e2New = calcquant(e2, m)
     e3New = calcquant(e3, m)
@@ -23,7 +40,7 @@ def error_quantization(image, error, m=None):
     #    2)  if difference between bin's lower & upper,
     #           assign new difference value that is median between the two
 
-def calcquant(error, m):
+def calcquant_old(error, m):
     values = range(-255, 256)
 
     #bins is actually just a list of key:value pairs that maps the actual error value
@@ -41,16 +58,16 @@ def calcquant(error, m):
             bins[key] = median
             #print key, " :  ", bins[key]
             key = key + 1
-            lowerbound = lowerbound + 1            
+            lowerbound = lowerbound + 1
             #print "Median is ", median, "  lowerbound is  ", lowerbound, "  upperbound is ", upperbound
         if(upperbound + binsize <= len(values)):
             upperbound = upperbound + binsize
             median = lowerbound + offset
-            
+
     upperbound = len(values)
     offset = (upperbound - lowerbound)/2
     median = lowerbound + offset
-    
+
     while (lowerbound < upperbound):
         bins[key] = median
         key = key + 1
@@ -59,8 +76,8 @@ def calcquant(error, m):
     #for speed, search for matching bin with binary search
     #needs to called recursively
     errorQuantized = list()
-    for i, pixel in enumerate(error):            
-        errorQuantized.append(bins[pixel])  #bins[pixel] returns value, which is new 
+    for i, pixel in enumerate(error):
+        errorQuantized.append(bins[pixel])  #bins[pixel] returns value, which is new
         #error val and is placed in new list
 
     return errorQuantized
