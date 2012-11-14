@@ -9,6 +9,7 @@ import Image as pil
 import os
 import sys
 import itertools as it
+import struct
 
 # project modules
 import reduce
@@ -16,6 +17,7 @@ import quantization
 import predictive_encoding as pe
 import error_quantization as eq
 import encoding
+from byte_packer import bin_seq_to_bytearray
 
 HELP = """
 encoding: choose the encoding scheme
@@ -159,6 +161,8 @@ def encoding_delegate(image, channels, *args):
     t5_output = [encoding.encode(channel, scheme) for channel in t5_output]
     # t5_output = [encoding.decode(enc, scheme) for enc in t5_output]
 
+    t5_output = bin_seq_to_bytearray(''.join(t5_output))
+
     return t5_output
 
 def error_delegate(image, error, *args):
@@ -190,7 +194,8 @@ def help(image, *args):
 
 def output_delegate(image, *args):
     with open('../Output/test.YBR','wb') as out:
-        out.write(str(args[0]))
+        for it in args[0]:
+            out.write(struct.pack("B", it))
     pass
 
 def predict_delegate(image, t2_output, widths, heights, *args):

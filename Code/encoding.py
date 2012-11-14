@@ -3,6 +3,7 @@ from shanfan_enc import shanfan_encode
 from shanfan_enc import shanfan_decode
 from lzw_enc import lzw_encode
 from lzw_enc import lzw_decode
+from byte_packer import int_seq_to_bin_seq
 
 ENCODING_SCHEME_NONE = 1
 ENCODING_SCHEME_VARLEN = 2
@@ -22,12 +23,13 @@ def list2string(alist):
 
 def encode( chan, opcode):
     if( opcode == ENCODING_SCHEME_VARLEN):
-        return shanfan_encode(chan)
+        return shanfan_encode(chan)[0]
     if( opcode == ENCODING_SCHEME_DICT):
         chan = [str(s) for s in chan]
         return lzw_encode(chan)
+
     else:
-        return chan
+        return int_seq_to_bin_seq(chan, 255)
 
 def decode( chan, opcode):
     if( opcode == ENCODING_SCHEME_VARLEN):

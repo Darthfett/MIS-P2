@@ -1,3 +1,5 @@
+from byte_packer import int_seq_to_bin_seq
+
 def lzw_encode(seq):
     seq = list(seq) # make a copy
     seq.reverse() # For efficiency, we will reverse the list and get data from the end
@@ -10,7 +12,7 @@ def lzw_encode(seq):
     try:
         s = seq.pop()
     except IndexError:
-        return output
+        return int_seq_to_bin_seq(output, 255)
 
     # dictionary = [] # TODO: Set a default set of values for the dictionary
     while True:
@@ -32,7 +34,7 @@ def lzw_encode(seq):
         output.append(dictionary[s])
     else:
         output.append(i)
-    return output
+    return int_seq_to_bin_seq(output, len(dictionary))
 
 def lzw_decode(seq):
 
