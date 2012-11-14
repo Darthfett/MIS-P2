@@ -6,7 +6,7 @@ from byte_packer import int_seq_to_bytearray
 
 def calcquant(channel, num_bins):
     if not num_bins:
-        return channel
+        return channel, len(channel)
 
     # Get amount covered by each bin
     bin_size = int(math.ceil(256 / num_bins))
@@ -14,7 +14,9 @@ def calcquant(channel, num_bins):
     # Get bin for each value in channel
     bin_vals = [int(i / bin_size) for i in channel]
 
-    return int_seq_to_bytearray(bin_vals, num_bins-1)
+    return bin_vals
+
+    # return int_seq_to_bytearray(bin_vals, num_bins-1), len(channel)
 
 def quantize(color_channels, N=((None,)*3)): # Default values of None to indicate no quantization.
     """
