@@ -22,6 +22,7 @@ def list2string(alist):
 #    - Encoding Option 3: Dictionary encoding with LZW coding (for a given dictionary bit length)
 
 def encode( chan, opcode):
+
     if( opcode == ENCODING_SCHEME_VARLEN):
         return shanfan_encode(chan)[0]
     if( opcode == ENCODING_SCHEME_DICT):

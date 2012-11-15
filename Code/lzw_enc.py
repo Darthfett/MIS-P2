@@ -27,8 +27,6 @@ def lzw_encode(seq):
             dictionary[s + c] = i
             i += 1
             s = c
-        # if len(output) == 46643:
-            # import pdb; pdb.set_trace()
 
     if s in dictionary:
         output.append(dictionary[s])

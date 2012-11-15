@@ -54,7 +54,7 @@ def get_image():
     while image is None:
         image_path = raw_input("Select an image: ")
         if not image_path:
-            image_path = os.path.join(os.path.split(__file__)[0], "../", "Input", "test.bmp")
+            image_path = os.path.join(os.path.split(__file__)[0], "../", "Input", "test2.png")
         try:
             image = pil.open(image_path)
         except Exception:
@@ -186,7 +186,7 @@ def error_delegate(image, error, *args):
             bins = int(bin_input)
 
     t4_output = eq.error_quantization(image, error, bins)
-    t4_output = [[max(min(i, 255), 0) for i in ch] for ch in t4_output]
+    # t4_output = [[max(min(i, 255), 0) for i in ch] for ch in t4_output]
     return t4_output
 
 def help(image, *args):
@@ -212,6 +212,7 @@ def predict_delegate(image, t2_output, widths, heights, *args):
             predict_type = -1
         if (predict_type < 1 or predict_type > 8):
             print("Invalid input")
+
     predicted_channels = pe.predict_encoding(t2_output, widths, heights, predict_type)
     return predicted_channels
 

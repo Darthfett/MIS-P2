@@ -4,7 +4,7 @@ import math
 
 from byte_packer import int_seq_to_bytearray
 
-def calcquant(channel, num_bins):
+def error_quantize(channel, num_bins):
     if not num_bins:
         return channel
 
@@ -21,14 +21,15 @@ def error_quantization(image, error, m=None):
     (Task 4): Given image as a list of values post-predictive coding, and m,
     perform uniform OR non-uniform quantization of the error into m bins.
     """
+
     if m is None:
         return error
 
     e1, e2, e3 = error
 
-    e1New = calcquant(e1, m)
-    e2New = calcquant(e2, m)
-    e3New = calcquant(e3, m)
+    e1New = error_quantize(e1, m)
+    e2New = error_quantize(e2, m)
+    e3New = error_quantize(e3, m)
 
     return e1New, e2New, e3New
     #error quantization principle:  get the first value, and all following

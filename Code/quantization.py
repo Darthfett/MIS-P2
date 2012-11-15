@@ -6,7 +6,7 @@ from byte_packer import int_seq_to_bytearray
 
 def calcquant(channel, num_bins):
     if not num_bins:
-        return channel, len(channel)
+        return channel
 
     # Get amount covered by each bin
     bin_size = int(math.ceil(256 / num_bins))
