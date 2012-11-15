@@ -165,7 +165,7 @@ def encoding_delegate(image, channels, *args):
 
     return t5_output
 
-def error_delegate(image, error, *args):
+def error_delegate(image, error, maxvals, *args):
     bins = None
     while bins is None:
         bin_input = raw_input("Number of bins to quantize error: ")
@@ -185,7 +185,7 @@ def error_delegate(image, error, *args):
         else:
             bins = int(bin_input)
 
-    t4_output = eq.error_quantization(image, error, bins)
+    t4_output = eq.error_quantization(image, error, maxvals, bins)
     # t4_output = [[max(min(i, 255), 0) for i in ch] for ch in t4_output]
     return t4_output
 
@@ -226,7 +226,10 @@ def quantization_delegate(image, channels, *args):
 
     quantized_channels = quantization.quantize(channels, bins)
 
-    return quantized_channels
+    if not any(bins):
+        bins = (255, 255, 255)
+
+    return quantized_channels, bins
 
 def reduce_delegate(image, *args):
     channels = get_channels(Image)
@@ -289,7 +292,7 @@ def main(args):
     print("Task 2")
     print("================")
     # Task 2: quantization of the channels into bins
-    t2_output = quantization_delegate(Image, reduced_channels)
+    t2_output, max_vals = quantization_delegate(Image, reduced_channels)
     print("================")
 
     print("Task 3")
@@ -303,7 +306,7 @@ def main(args):
     print("================")
     # TODO: What is the output of Task 3 and what does Task 4 require as input?
     # Task 4: Error quantization
-    t4_output = error_delegate(Image, t3_output)
+    t4_output = error_delegate(Image, t3_output, max_vals)
     print("================")
 
     print("Task 5")

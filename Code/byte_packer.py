@@ -16,7 +16,10 @@ def num_bits(max_size):
     return int(ceil(log(max_size + 1, 2)))
 
 def int_to_bin(i, bitlen):
-    seq = bin(i)[2:]
+    if i < 0:
+        seq = bin(i)[3:]
+    else:
+        seq = bin(i)[2:]
     if len(seq) % bitlen:
         seq = '0' * (bitlen - (len(seq) % bitlen)) + seq
 

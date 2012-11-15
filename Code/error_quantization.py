@@ -4,32 +4,35 @@ import math
 
 from byte_packer import int_seq_to_bytearray
 
-def error_quantize(channel, num_bins):
+def error_quantize(channel, num_bins, maxval):
     if not num_bins:
         return channel
 
     # Get amount covered by each bin
-    bin_size = int(math.ceil(512 / num_bins))
+    bin_size = int(math.ceil(maxval * 2 / num_bins))
 
     # Get bin for each value in channel
-    bin_vals = [int((i + 256) / bin_size) for i in channel]
+    bin_vals = [int((i + maxval) / bin_size) for i in channel]
 
     return int_seq_to_bytearray(bin_vals, num_bins-1)
 
-def error_quantization(image, error, m=None):
+def error_quantization(image, error, maxvals, m=None):
     """
     (Task 4): Given image as a list of values post-predictive coding, and m,
     perform uniform OR non-uniform quantization of the error into m bins.
     """
 
     if m is None:
-        return error
+        e1 = int_seq_to_bytearray(error[0], maxvals[0])
+        e2 = int_seq_to_bytearray(error[1], maxvals[1])
+        e3 = int_seq_to_bytearray(error[2], maxvals[2])
+        return e1, e2, e3
 
     e1, e2, e3 = error
 
-    e1New = error_quantize(e1, m)
-    e2New = error_quantize(e2, m)
-    e3New = error_quantize(e3, m)
+    e1New = error_quantize(e1, m, maxvals[0])
+    e2New = error_quantize(e2, m, maxvals[1])
+    e3New = error_quantize(e3, m, maxvals[2])
 
     return e1New, e2New, e3New
     #error quantization principle:  get the first value, and all following
